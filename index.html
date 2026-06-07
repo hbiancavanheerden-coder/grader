@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Post Grader · TemplateBase</title>
+<meta name="description" content="Paste any post. Get scored across 5 dimensions. See the exact template that fixes your biggest weakness — free."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --orange:        #FF6B2B;
+    --orange-hover:  #E85A1A;
+    --orange-pale:   #FFF3EE;
+    --orange-border: #FFD5C2;
+    --black:         #0D0D0D;
+    --gray-800:      #2A2A2A;
+    --gray-600:      #555555;
+    --gray-400:      #999999;
+    --gray-200:      #E8E8E8;
+    --gray-100:      #F6F6F6;
+    --white:         #FFFFFF;
+    --green:         #16A34A;
+    --green-pale:    #F0FDF4;
+    --red:           #DC2626;
+    --red-pale:      #FEF2F2;
+    --amber:         #D97706;
+    --amber-pale:    #FFFBEB;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--black); -webkit-font-smoothing: antialiased; }
+  .serif { font-family: 'Instrument Serif', serif; }
+  ::placeholder { color: #bbb; }
+  input, textarea, button { font-family: 'DM Sans', sans-serif; }
+
+  /* NAV */
+  nav { position: sticky; top: 0; z-index: 100; background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { display: flex; align-items: center; gap: 8px; }
+  .nav-icon { width: 30px; height: 30px; background: var(--orange); border-radius: 7px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 14px; }
+  .nav-cta { background: var(--black); color: #fff; text-decoration: none; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; }
+  .nav-cta:hover { opacity: .8; }
+
+  /* LAYOUT */
+  .wrap { max-width: 660px; margin: 0 auto; padding: 52px 22px 90px; }
+
+  /* HERO */
+  .hero { text-align: center; margin-bottom: 52px; }
+  .hero-badge { display: inline-block; background: var(--orange-pale); border: 1px solid var(--orange-border); border-radius: 999px; padding: 4px 14px; font-size: 12px; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 20px; }
+  .hero h1 { font-size: clamp(30px, 6vw, 50px); font-weight: 400; letter-spacing: -.025em; line-height: 1.08; margin-bottom: 16px; }
+  .hero h1 em { color: var(--orange); font-style: italic; }
+  .hero p { font-size: 16px; color: var(--gray-400); line-height: 1.7; max-width: 440px; margin: 0 auto 28px; }
+  .checks { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; }
+  .check { font-size: 13px; color: var(--gray-400); display: flex; align-items: center; gap: 5px; }
+  .check b { color: var(--orange); }
+
+  /* FORM */
+  .form-group { display: flex; flex-direction: column; gap: 22px; }
+  .label { display: block; font-size: 11px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 10px; }
+  .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .label-row .label { margin-bottom: 0; }
+  .char-count { font-size: 12px; color: var(--gray-200); }
+
+  .platforms { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pill { background: var(--white); border: 1.5px solid var(--gray-200); color: var(--gray-600); padding: 7px 16px; border-radius: 999px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all .15s; }
+  .pill:hover { border-color: var(--orange); color: var(--orange); }
+  .pill.active { background: var(--orange); color: #fff; border-color: var(--orange); font-weight: 700; }
+
+  .field { width: 100%; border: 1.5px solid var(--gray-200); border-radius: 10px; padding: 13px 16px; font-size: 15px; color: var(--black); background: var(--white); transition: border-color .15s, box-shadow .15s; outline: none; }
+  .field:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(255,107,43,.1); }
+  textarea.field { min-height: 176px; resize: vertical; line-height: 1.65; }
+
+  .alert { border-radius: 10px; padding: 11px 16px; font-size: 13px; }
+  .alert-amber { background: var(--amber-pale); border: 1.5px solid #FDE68A; color: #92400E; }
+  .alert-red   { background: var(--red-pale);   border: 1.5px solid #FECACA; color: var(--red); }
+
+  /* BUTTONS */
+  .btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--orange); color: #fff; border: none; padding: 14px 28px; border-radius: 9px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all .15s; width: 100%; }
+  .btn-primary:hover:not(:disabled) { background: var(--orange-hover); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(255,107,43,.28); }
+  .btn-primary:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+  .btn-ghost { display: inline-flex; align-items: center; gap: 6px; background: transparent; color: var(--gray-600); border: 1.5px solid var(--gray-200); padding: 10px 20px; border-radius: 9px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .15s; }
+  .btn-ghost:hover { border-color: var(--orange); color: var(--orange); }
+  .btn-sm { background: var(--gray-100); border: none; color: var(--gray-600); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all .15s; }
+  .btn-sm:hover { background: var(--orange); color: #fff; }
+
+  .spin { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.35); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* MODAL */
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.52); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
+  .modal { background: var(--white); border-radius: 18px; padding: 40px 36px; max-width: 420px; width: 100%; box-shadow: 0 32px 80px rgba(0,0,0,.18); animation: fadeUp .4s ease both; }
+  .modal-icon { width: 46px; height: 46px; background: var(--orange-pale); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 20px; }
+  .modal h2 { font-size: 26px; letter-spacing: -.02em; margin-bottom: 10px; }
+  .modal p  { font-size: 14px; color: var(--gray-400); line-height: 1.65; margin-bottom: 24px; }
+  .modal-note { font-size: 11px; color: var(--gray-200); text-align: center; margin-top: 12px; }
+
+  /* RESULTS */
+  .divider { display: flex; align-items: center; gap: 14px; margin-bottom: 30px; }
+  .divider hr { flex: 1; border: none; border-top: 1px solid var(--gray-200); }
+  .divider span { font-size: 11px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: .08em; white-space: nowrap; }
+
+  .card { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 14px; padding: 28px; margin-bottom: 14px; }
+  .score-inner { display: flex; gap: 28px; align-items: center; flex-wrap: wrap; }
+  .ring-wrap { position: relative; width: 124px; height: 124px; flex-shrink: 0; }
+  .ring-wrap svg { position: absolute; top: 0; left: 0; }
+  .ring-inner { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring-num   { font-size: 28px; font-weight: 800; letter-spacing: -.03em; line-height: 1; }
+  .ring-denom { font-size: 11px; color: var(--gray-400); }
+  .score-meta { flex: 1; min-width: 210px; }
+  .score-badge { display: inline-block; padding: 3px 11px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 14px; }
+  .meta-row { margin-bottom: 12px; }
+  .meta-lbl { font-size: 11px; color: var(--gray-200); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 3px; font-weight: 700; }
+  .meta-val { font-size: 14px; line-height: 1.55; }
+
+  .bar-group { margin-bottom: 14px; }
+  .bar-row  { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .bar-lbl  { font-size: 13px; color: var(--gray-600); }
+  .bar-val  { font-size: 13px; font-weight: 700; }
+  .bar-track{ background: #F0F0F0; border-radius: 999px; height: 7px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 999px; transition: width 1.3s cubic-bezier(.16,1,.3,1); }
+
+  .fix-card { background: var(--orange-pale); border: 1.5px solid var(--orange-border); border-radius: 14px; padding: 26px; margin-bottom: 14px; }
+  .fix-card .label { color: var(--orange); margin-bottom: 10px; }
+  .fix-card p { font-size: 15px; color: var(--gray-800); line-height: 1.75; }
+
+  .rewrite-hdr { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+  .rewrite-tag { font-size: 13px; color: var(--orange); font-weight: 600; }
+  .rewrite-body { background: var(--gray-100); border-radius: 10px; padding: 20px; white-space: pre-wrap; font-size: 15px; line-height: 1.75; color: var(--black); }
+
+  .tmpl-card { border: 2px solid var(--orange); border-radius: 14px; padding: 28px; margin-bottom: 14px; }
+  .tmpl-hdr  { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 18px; }
+  .tmpl-emoji{ font-size: 30px; flex-shrink: 0; }
+  .tmpl-pill { font-size: 11px; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 5px; }
+  .tmpl-name { font-size: 20px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 5px; }
+  .tmpl-desc { font-size: 14px; color: var(--gray-400); line-height: 1.55; }
+  .tmpl-rule { height: 1px; background: var(--gray-200); margin: 18px 0; }
+  .tmpl-text { font-size: 14px; color: var(--gray-600); line-height: 1.7; margin-bottom: 22px; }
+  .tmpl-cta  { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .tmpl-fine { font-size: 12px; color: var(--gray-200); }
+
+  .grade-again { text-align: center; margin-top: 32px; }
+  .grade-again a { color: var(--orange); font-weight: 700; text-decoration: none; }
+
+  footer { border-top: 1px solid var(--gray-200); padding: 22px 24px; text-align: center; font-size: 13px; color: var(--gray-200); }
+  footer a { color: var(--orange); font-weight: 700; text-decoration: none; }
+
+  /* ADMIN */
+  .admin-bg { min-height: 100vh; background: var(--gray-100); }
+  .admin-nav { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 15px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .admin-btns { display: flex; gap: 10px; }
+  .admin-inner { padding: 28px; max-width: 1080px; margin: 0 auto; }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 14px; margin-bottom: 24px; }
+  .stat-card { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 14px; padding: 22px; text-align: center; }
+  .stat-num { font-size: 38px; font-weight: 800; color: var(--orange); letter-spacing: -.03em; }
+  .stat-lbl { font-size: 12px; color: var(--gray-400); margin-top: 4px; }
+  .tbl-card { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 14px; overflow: hidden; }
+  .tbl-head { padding: 16px 20px; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center; }
+  table { width: 100%; border-collapse: collapse; }
+  th { background: var(--gray-100); padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: .06em; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--gray-200); font-size: 13px; color: var(--gray-600); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #FAFAFA; }
+  .tag { background: var(--orange-pale); color: var(--orange); padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+
+  /* LOGIN */
+  .login-bg { min-height: 100vh; background: var(--gray-100); display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .login-box { background: var(--white); border-radius: 16px; padding: 40px 36px; max-width: 380px; width: 100%; box-shadow: 0 8px 40px rgba(0,0,0,.08); }
+
+  .hidden { display: none !important; }
+  .fade-up { animation: fadeUp .45s ease both; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+
+  @media (max-width: 500px) {
+    .modal { padding: 30px 22px; }
+    .score-inner { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- EMAIL GATE -->
+<div id="emailGate" class="overlay hidden">
+  <div class="modal">
+    <div class="modal-icon">✦</div>
+    <h2 class="serif">Your results are ready</h2>
+    <p>Drop your email to unlock your full score, AI rewrite, and matched template from TemplateBase.</p>
+    <input class="field" type="email" id="emailInput" placeholder="you@email.com" style="margin-bottom:10px"/>
+    <p id="emailErr" style="color:var(--red);font-size:13px;margin-bottom:10px;" class="hidden"></p>
+    <button class="btn-primary" id="emailBtn" onclick="submitEmail()">See My Results →</button>
+    <p class="modal-note">No spam. Unsubscribe anytime.</p>
+  </div>
+</div>
+
+<!-- ══════════════ GRADER PAGE ══════════════ -->
+<div id="graderPage">
+
+  <nav>
+    <div class="nav-logo">
+      <div class="nav-icon">✦</div>
+      <span style="font-weight:800;font-size:15px;letter-spacing:-.02em">TemplateBase</span>
+      <span style="color:var(--gray-200);margin:0 4px">/</span>
+      <span style="font-size:13px;color:var(--gray-400)">Post Grader</span>
+    </div>
+    <a href="https://templatebase.site" target="_blank" class="nav-cta">Get 600 Templates →</a>
+  </nav>
+
+  <div class="wrap">
+
+    <div class="hero">
+      <div class="hero-badge">Free · Powered by Claude AI</div>
+      <h1 class="serif">Is your post strong<br/>enough to <em>actually perform?</em></h1>
+      <p>Paste any post. Get scored across 5 dimensions. See exactly which template structure fixes your weakest point.</p>
+      <div class="checks">
+        <div class="check"><b>✓</b> <span id="leftCount">3</span> free grades left today</div>
+        <div class="check"><b>✓</b> Results in ~5 seconds</div>
+        <div class="check"><b>✓</b> Matched template included</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+
+      <div>
+        <span class="label">Platform</span>
+        <div class="platforms">
+          <button class="pill active" onclick="setPlatform(this,'X / Twitter')">X / Twitter</button>
+          <button class="pill" onclick="setPlatform(this,'Threads')">Threads</button>
+          <button class="pill" onclick="setPlatform(this,'LinkedIn')">LinkedIn</button>
+          <button class="pill" onclick="setPlatform(this,'Substack')">Substack</button>
+          <button class="pill" onclick="setPlatform(this,'Instagram')">Instagram</button>
+        </div>
+      </div>
+
+      <div>
+        <span class="label">Your Niche</span>
+        <input class="field" type="text" id="nicheInput" placeholder="e.g. SaaS founder, personal finance for millennials, fitness coach…"/>
+      </div>
+
+      <div>
+        <div class="label-row">
+          <span class="label">Your Post</span>
+          <span class="char-count" id="charCount">0 chars</span>
+        </div>
+        <textarea class="field" id="postInput" placeholder="Paste your post here exactly as you'd publish it…" oninput="document.getElementById('charCount').textContent=this.value.length+' chars'"></textarea>
+      </div>
+
+      <div id="alertAmber" class="alert alert-amber hidden">⚠️ <strong>1 grade left today.</strong> Resets at midnight.</div>
+      <div id="alertErr"   class="alert alert-red hidden"></div>
+
+      <button class="btn-primary" id="gradeBtn" onclick="runGrade()">Grade My Post →</button>
+
+      <div id="noGradesMsg" class="hidden" style="text-align:center;padding-top:8px">
+        <p style="font-size:13px;color:var(--gray-400);margin-bottom:14px">Want unlimited grades + 600 AI-fill templates?</p>
+        <a href="https://templatebase.site/#pricing" target="_blank">
+          <button class="btn-primary" style="width:auto">Get All Access — $99 once →</button>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- RESULTS -->
+    <div id="results" class="hidden" style="margin-top:60px">
+
+      <div class="divider"><hr/><span>Your Results</span><hr/></div>
+
+      <!-- Score ring -->
+      <div class="card">
+        <div class="score-inner">
+          <div class="ring-wrap">
+            <svg width="124" height="124"><circle cx="62" cy="62" r="50" fill="none" stroke="#F0F0F0" stroke-width="9"/></svg>
+            <svg width="124" height="124" style="transform:rotate(-90deg)">
+              <circle id="ringArc" cx="62" cy="62" r="50" fill="none" stroke-width="9" stroke-linecap="round" stroke-dasharray="0 314.16" style="transition:stroke-dasharray 1.3s cubic-bezier(.16,1,.3,1)"/>
+            </svg>
+            <div class="ring-inner">
+              <span id="ringNum" class="ring-num">—</span>
+              <span class="ring-denom">/100</span>
+            </div>
+          </div>
+          <div class="score-meta">
+            <span id="scoreBadge" class="score-badge"></span>
+            <div class="meta-row">
+              <div class="meta-lbl">Top Strength</div>
+              <div id="strength" class="meta-val" style="color:var(--green)"></div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-lbl">Biggest Problem</div>
+              <div id="weakness" class="meta-val" style="color:var(--red)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Breakdown -->
+      <div class="card">
+        <span class="label">Score Breakdown</span>
+        <div id="barsWrap"></div>
+      </div>
+
+      <!-- Fix it -->
+      <div class="fix-card">
+        <span class="label">⚡ How To Fix It</span>
+        <p id="fixIt"></p>
+      </div>
+
+      <!-- Rewrite -->
+      <div class="card">
+        <div class="rewrite-hdr">
+          <div>
+            <span class="label" style="margin-bottom:4px">✦ AI Rewrite</span>
+            <div id="rewriteTag" class="rewrite-tag"></div>
+          </div>
+          <button class="btn-sm" id="copyBtn" onclick="copyRewrite()">Copy post</button>
+        </div>
+        <div id="rewriteBody" class="rewrite-body"></div>
+      </div>
+
+      <!-- Template CTA -->
+      <div class="tmpl-card">
+        <div class="tmpl-hdr">
+          <div id="tmplEmoji" class="tmpl-emoji"></div>
+          <div>
+            <div class="tmpl-pill">Matched Template · TemplateBase</div>
+            <div id="tmplName" class="tmpl-name"></div>
+            <div id="tmplDesc" class="tmpl-desc"></div>
+          </div>
+        </div>
+        <div class="tmpl-rule"></div>
+        <p class="tmpl-text">TemplateBase has <strong>600 templates</strong> like this — for X, Threads, LinkedIn, Substack and Instagram. Fill any with AI in your exact voice.</p>
+        <div class="tmpl-cta">
+          <a href="https://templatebase.site/#pricing" target="_blank">
+            <button class="btn-primary" style="width:auto;padding:14px 28px">Unlock 600 Templates →</button>
+          </a>
+          <span class="tmpl-fine">5 free · no card · cancel anytime</span>
+        </div>
+      </div>
+
+      <div id="gradeAgain" class="grade-again"></div>
+
+    </div><!-- /results -->
+
+  </div><!-- /wrap -->
+
+  <footer>
+    A free tool by <a href="https://templatebase.site">TemplateBase</a> · 600+ social media templates · Fill with AI
+  </footer>
+
+</div><!-- /graderPage -->
+
+<!-- ══════════════ ADMIN PAGE ══════════════ -->
+<div id="adminPage" class="hidden">
+
+  <div id="adminLogin" class="login-bg">
+    <div class="login-box">
+      <div style="font-size:13px;font-weight:800;color:var(--orange);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">TemplateBase</div>
+      <h2 style="font-size:22px;font-weight:800;letter-spacing:-.02em;margin-bottom:24px">Admin Panel</h2>
+      <input class="field" type="password" id="pwInput" placeholder="Password" style="margin-bottom:10px" onkeydown="if(event.key==='Enter')doLogin()"/>
+      <p id="pwErr" style="color:var(--red);font-size:13px;margin-bottom:10px" class="hidden"></p>
+      <button class="btn-primary" onclick="doLogin()">Sign In</button>
+    </div>
+  </div>
+
+  <div id="adminDash" class="admin-bg hidden">
+    <div class="admin-nav">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="nav-icon">✦</div>
+        <span style="font-weight:800;font-size:14px">TemplateBase</span>
+        <span style="color:var(--gray-200);margin:0 6px">/</span>
+        <span style="font-size:13px;font-weight:600;color:var(--gray-600)">Lead Dashboard</span>
+      </div>
+      <div class="admin-btns">
+        <button class="btn-sm" id="copyAllBtn" onclick="copyAllEmails()">Copy All Emails</button>
+        <button class="btn-sm" onclick="exportCSV()" style="background:var(--orange);color:#fff">Export CSV</button>
+      </div>
+    </div>
+    <div class="admin-inner">
+      <div class="stats-grid">
+        <div class="stat-card"><div id="sTotal" class="stat-num">0</div><div class="stat-lbl">Total Leads</div></div>
+        <div class="stat-card"><div id="sWeek"  class="stat-num">0</div><div class="stat-lbl">This Week</div></div>
+        <div class="stat-card"><div id="sToday" class="stat-num">0</div><div class="stat-lbl">Today</div></div>
+      </div>
+      <div class="tbl-card">
+        <div class="tbl-head">
+          <strong>All Leads</strong>
+          <span id="leadCount">0 total</span>
+        </div>
+        <div id="tblWrap"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /adminPage -->
+
+<script>
+// ══════════════════════════════════════════════
+// CONFIG — change password before deploying
+// ══════════════════════════════════════════════
+const ADMIN_PW  = "templatebase2024";
+const MAX_GRADES = 3;
+const LS_KEY     = "tb_g3";
+
+const TMPLS = {
+  hook_weak:       { label:"Authority Builder",  icon:"🎯", desc:"Opens with a bold credibility hook that stops the scroll instantly." },
+  no_story:        { label:"Storytelling",        icon:"📖", desc:"A before/after arc that makes your transformation land emotionally." },
+  no_perspective:  { label:"Perspective Shift",   icon:"🔄", desc:"Challenges a widely-held belief with a sharp contrarian take." },
+  not_educational: { label:"Educational",         icon:"💡", desc:"Teaches something specific and actionable in a skimmable format." },
+  low_engagement:  { label:"Engagement",          icon:"💬", desc:"Invites direct audience participation with a clear open prompt." },
+  not_relatable:   { label:"Relatability",        icon:"🤝", desc:"Makes the reader feel deeply seen through a shared experience." },
+};
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+let platform = "X / Twitter";
+let pending  = null;
+let rewrite  = "";
+
+// ══════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════
+const $  = id => document.getElementById(id);
+const show = id => $(id).classList.remove("hidden");
+const hide = id => $(id).classList.add("hidden");
+const esc  = s  => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+function lsGet()    { try { return JSON.parse(localStorage.getItem(LS_KEY)||"{}"); } catch { return {}; } }
+function lsSet(d)   { try { localStorage.setItem(LS_KEY, JSON.stringify(d)); } catch {} }
+function dayKey()   { return new Date().toISOString().slice(0,10); }
+function leftToday(){ const s=lsGet(); return Math.max(0, MAX_GRADES-(s.grades?.[dayKey()]||0)); }
+function useGrade() { const s=lsGet(),t=dayKey(); s.grades=s.grades||{}; s.grades[t]=(s.grades[t]||0)+1; lsSet(s); }
+function getEmail() { return lsGet().email||""; }
+function saveEmail(e){ const s=lsGet(); s.email=e; lsSet(s); }
+
+function sColor(s){ return s>=80?"var(--green)":s>=60?"var(--amber)":s>=40?"var(--orange)":"var(--red)"; }
+function sLabel(s){
+  if(s>=80) return ["Strong","var(--green-pale)","var(--green)"];
+  if(s>=60) return ["Good","var(--amber-pale)","var(--amber)"];
+  if(s>=40) return ["Needs Work","var(--orange-pale)","var(--orange)"];
+  return ["Weak","var(--red-pale)","var(--red)"];
+}
+
+// ══════════════════════════════════════════════
+// PERSISTENT STORAGE — leads
+// ══════════════════════════════════════════════
+async function storeLead(email, plat, niche, post) {
+  try {
+    let leads = [];
+    try { const r = await window.storage.get("tb_leads"); if(r) leads = JSON.parse(r.value); } catch{}
+    if (!leads.find(l=>l.email===email)) {
+      leads.unshift({ id:Date.now(), email, platform:plat, niche,
+        preview:post.slice(0,180),
+        date:new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"}),
+        ts:Date.now() });
+      await window.storage.set("tb_leads", JSON.stringify(leads));
+    }
+  } catch(e){ console.warn("storage:",e); }
+}
+async function fetchLeads() {
+  try { const r=await window.storage.get("tb_leads"); return r?JSON.parse(r.value):[]; } catch{ return []; }
+}
+
+// ══════════════════════════════════════════════
+// UI INIT
+// ══════════════════════════════════════════════
+function refreshUI() {
+  const left = leftToday();
+  $("leftCount").textContent = left;
+  const btn = $("gradeBtn");
+  if (left <= 0) {
+    btn.disabled = true; btn.textContent = "No grades left today";
+    show("noGradesMsg");
+  } else {
+    btn.disabled = false;
+    if (left === 1) show("alertAmber"); else hide("alertAmber");
+  }
+}
+
+function setPlatform(btn, name) {
+  platform = name;
+  document.querySelectorAll(".pill").forEach(p=>p.classList.remove("active"));
+  btn.classList.add("active");
+}
+
+// ══════════════════════════════════════════════
+// GRADE — calls /.netlify/functions/grade
+// ══════════════════════════════════════════════
+async function runGrade() {
+  const post  = $("postInput").value.trim();
+  const niche = $("nicheInput").value.trim();
+
+  hide("alertErr");
+  if (!post)  { showErr("Please paste your post first."); return; }
+  if (!niche) { showErr("Please enter your niche."); return; }
+  if (leftToday()<=0) { showErr("You've used all 3 free grades today. Come back tomorrow."); return; }
+
+  const btn = $("gradeBtn");
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Grading with AI…';
+  hide("results");
+
+  try {
+    // ← calls YOUR Netlify function, not Anthropic directly
+    const res = await fetch("/.netlify/functions/grade", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ post, platform, niche })
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `Error ${res.status}`);
+
+    useGrade();
+    refreshUI();
+    pending = data;
+
+    if (getEmail()) {
+      renderResults(data);
+    } else {
+      show("emailGate");
+      setTimeout(()=>$("emailInput").focus(), 100);
+    }
+
+  } catch(e) {
+    showErr("Grading failed: " + e.message);
+    btn.disabled = false;
+    btn.textContent = "Grade My Post →";
+  } finally {
+    if (leftToday() > 0 && !pending) {
+      btn.disabled = false;
+      btn.textContent = "Grade My Post →";
+    }
+  }
+}
+
+function showErr(msg) { $("alertErr").textContent = msg; show("alertErr"); }
+
+// ══════════════════════════════════════════════
+// EMAIL GATE
+// ══════════════════════════════════════════════
+async function submitEmail() {
+  const email = $("emailInput").value.trim().toLowerCase();
+  hide("emailErr");
+  if (!email||!email.includes("@")||!email.includes(".")) {
+    $("emailErr").textContent = "Enter a valid email address.";
+    show("emailErr"); return;
+  }
+  const btn = $("emailBtn");
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Unlocking…';
+
+  saveEmail(email);
+  await storeLead(email, platform, $("nicheInput").value.trim(), $("postInput").value.trim());
+
+  hide("emailGate");
+  renderResults(pending);
+  btn.disabled = false;
+  btn.textContent = "See My Results →";
+}
+$("emailInput").addEventListener("keydown", e=>{ if(e.key==="Enter") submitEmail(); });
+
+// ══════════════════════════════════════════════
+// RENDER RESULTS
+// ══════════════════════════════════════════════
+function renderResults(r) {
+  const circ = 2*Math.PI*50;
+  const col  = sColor(r.overall_score);
+  const [lbl,bg,txt] = sLabel(r.overall_score);
+
+  // Ring
+  const arc = $("ringArc");
+  arc.style.stroke = col;
+  arc.setAttribute("stroke-dasharray", `${(r.overall_score/100)*circ} ${circ}`);
+  $("ringNum").textContent = r.overall_score;
+  $("ringNum").style.color = col;
+
+  // Badge
+  const badge = $("scoreBadge");
+  badge.textContent = lbl;
+  badge.style.background = bg;
+  badge.style.color = txt;
+
+  $("strength").textContent = "✓ " + r.top_strength;
+  $("weakness").textContent = "✕ " + r.top_weakness;
+
+  // Bars
+  const bars = [
+    ["🎣","Hook Strength",  r.scores.hook_strength],
+    ["🎯","Specificity",    r.scores.specificity],
+    ["📐","Format Fit",     r.scores.format_fit],
+    ["💡","Emotional Pull", r.scores.emotional_pull],
+    ["👉","CTA Clarity",    r.scores.cta_clarity],
+  ];
+  $("barsWrap").innerHTML = bars.map(([icon,lbl,score])=>`
+    <div class="bar-group">
+      <div class="bar-row">
+        <span class="bar-lbl">${icon} ${lbl}</span>
+        <span class="bar-val" style="color:${sColor(score)}">${score}/100</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:0%;background:${sColor(score)}" data-w="${score}"></div>
+      </div>
+    </div>`).join("");
+
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    document.querySelectorAll(".bar-fill[data-w]").forEach(b=>{ b.style.width=b.dataset.w+"%"; });
+  }));
+
+  $("fixIt").textContent = r.fix_it;
+
+  const tmpl = TMPLS[r.template_match] || TMPLS["hook_weak"];
+  rewrite = r.rewrite;
+  $("rewriteTag").textContent  = "Using " + tmpl.label + " structure";
+  $("rewriteBody").textContent = r.rewrite;
+  $("tmplEmoji").textContent   = tmpl.icon;
+  $("tmplName").textContent    = tmpl.label;
+  $("tmplDesc").textContent    = tmpl.desc;
+
+  const left = leftToday();
+  $("gradeAgain").innerHTML = left > 0
+    ? `<button class="btn-ghost" onclick="resetGrader()">Grade another post (${left} left today)</button>`
+    : `<p style="font-size:13px;color:var(--gray-400)">Daily limit reached. <a href="https://templatebase.site/#pricing" target="_blank">Get All Access</a> for unlimited grades.</p>`;
+
+  show("results");
+  $("results").classList.add("fade-up");
+  setTimeout(()=>$("results").scrollIntoView({behavior:"smooth",block:"start"}), 120);
+}
+
+function copyRewrite() {
+  const btn = $("copyBtn");
+  navigator.clipboard.writeText(rewrite).then(()=>{
+    btn.textContent="✓ Copied!"; setTimeout(()=>{ btn.textContent="Copy post"; },1500);
+  }).catch(()=>{
+    const t=document.createElement("textarea"); t.value=rewrite;
+    document.body.appendChild(t); t.select(); document.execCommand("copy"); document.body.removeChild(t);
+    btn.textContent="✓ Copied!"; setTimeout(()=>{ btn.textContent="Copy post"; },1500);
+  });
+}
+
+function resetGrader() {
+  hide("results"); hide("alertErr"); hide("alertAmber");
+  $("postInput").value=""; $("nicheInput").value="";
+  $("charCount").textContent="0 chars";
+  pending=null; rewrite="";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+// ══════════════════════════════════════════════
+// ADMIN
+// ══════════════════════════════════════════════
+function doLogin() {
+  if ($("pwInput").value !== ADMIN_PW) {
+    $("pwErr").textContent="Incorrect password."; show("pwErr"); return;
+  }
+  hide("pwErr"); hide("adminLogin"); show("adminDash"); loadLeads();
+}
+$("pwInput").addEventListener("keydown", e=>{ if(e.key==="Enter") doLogin(); });
+
+let allLeads = [];
+async function loadLeads() {
+  allLeads = await fetchLeads();
+  const now   = Date.now();
+  const week  = allLeads.filter(l=>now-l.ts<7*86400000).length;
+  const today = allLeads.filter(l=>new Date(l.ts).toDateString()===new Date().toDateString()).length;
+  $("sTotal").textContent = allLeads.length;
+  $("sWeek").textContent  = week;
+  $("sToday").textContent = today;
+  $("leadCount").textContent = allLeads.length+" total";
+
+  if (!allLeads.length) {
+    $("tblWrap").innerHTML=`<div style="padding:48px;text-align:center"><p style="color:var(--gray-400);font-size:15px;margin-bottom:8px">No leads yet.</p><p style="color:var(--gray-200);font-size:13px">Share the grader to start collecting.</p></div>`;
+    return;
+  }
+  $("tblWrap").innerHTML=`<div style="overflow-x:auto"><table>
+    <thead><tr><th>Email</th><th>Platform</th><th>Niche</th><th>Post Preview</th><th>Date</th></tr></thead>
+    <tbody>${allLeads.map(l=>`<tr>
+      <td style="font-weight:700;color:var(--black);white-space:nowrap">${esc(l.email)}</td>
+      <td><span class="tag">${esc(l.platform)}</span></td>
+      <td>${esc(l.niche||"")}</td>
+      <td style="max-width:240px;color:var(--gray-400)">${esc((l.preview||"").slice(0,120))}…</td>
+      <td style="white-space:nowrap;color:var(--gray-400)">${esc(l.date||"")}</td>
+    </tr>`).join("")}</tbody>
+  </table></div>`;
+}
+
+function copyAllEmails() {
+  navigator.clipboard.writeText(allLeads.map(l=>l.email).join("\n")).then(()=>{
+    const b=$("copyAllBtn"); b.textContent="✓ Copied!"; setTimeout(()=>{ b.textContent="Copy All Emails"; },1600);
+  });
+}
+function exportCSV() {
+  const rows=[["Email","Platform","Niche","Post Preview","Date"],
+    ...allLeads.map(l=>[l.email,l.platform,l.niche||"",(l.preview||"").replace(/"/g,"'"),l.date||""])];
+  const csv=rows.map(r=>r.map(c=>`"${c}"`).join(",")).join("\n");
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+  a.download="templatebase-leads.csv"; a.click();
+}
+
+// ══════════════════════════════════════════════
+// ROUTER
+// ══════════════════════════════════════════════
+function route() {
+  const isAdmin = window.location.pathname.includes("/admin") || window.location.search.includes("admin");
+  if (isAdmin) { hide("graderPage"); show("adminPage"); }
+  else         { show("graderPage"); hide("adminPage"); }
+}
+
+route();
+refreshUI();
+</script>
+</body>
+</html>
