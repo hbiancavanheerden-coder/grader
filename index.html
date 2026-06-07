@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Post Grader · TemplateBase</title>
+<meta name="description" content="Paste any post. Get scored across 5 dimensions. See the exact template that fixes your biggest weakness — free."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --or: #FF6B2B; --orh: #E85A1A; --orp: #FFF3EE; --orb: #FFD5C2;
+  --bk: #0D0D0D; --g8: #2A2A2A; --g6: #555; --g4: #999;
+  --g2: #E8E8E8; --g1: #F6F6F6; --wh: #fff;
+  --gn: #16A34A; --gnp: #F0FDF4; --rd: #DC2626; --rdp: #FEF2F2;
+  --am: #D97706; --amp: #FFFBEB;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--wh);color:var(--bk);-webkit-font-smoothing:antialiased}
+.serif{font-family:'Instrument Serif',serif}
+::placeholder{color:#bbb}
+input,textarea,button{font-family:'DM Sans',sans-serif}
+a{text-decoration:none}
+.hidden{display:none!important}
+.fade-up{animation:fadeUp .4s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:var(--wh);border-bottom:1px solid var(--g2);padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+.nlogo{display:flex;align-items:center;gap:8px}
+.nico{width:30px;height:30px;background:var(--or);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:14px}
+.ncta{background:var(--bk);color:#fff;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;transition:opacity .15s}
+.ncta:hover{opacity:.8}
+
+/* LAYOUT */
+.wrap{max-width:660px;margin:0 auto;padding:52px 22px 90px}
+
+/* HERO */
+.hero{text-align:center;margin-bottom:48px}
+.hbadge{display:inline-block;background:var(--orp);border:1px solid var(--orb);border-radius:999px;padding:4px 14px;font-size:12px;font-weight:700;color:var(--or);text-transform:uppercase;letter-spacing:.06em;margin-bottom:18px}
+.hero h1{font-size:clamp(28px,6vw,48px);font-weight:400;letter-spacing:-.025em;line-height:1.08;margin-bottom:14px}
+.hero h1 em{color:var(--or);font-style:italic}
+.hero p{font-size:15px;color:var(--g4);line-height:1.7;max-width:430px;margin:0 auto 24px}
+.hchecks{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
+.hcheck{font-size:13px;color:var(--g4);display:flex;align-items:center;gap:4px}
+.hcheck b{color:var(--or)}
+
+/* FORM */
+.fgroup{display:flex;flex-direction:column;gap:20px}
+.lbl{display:block;font-size:11px;font-weight:700;color:var(--g4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:9px}
+.lrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.lrow .lbl{margin-bottom:0}
+.ccount{font-size:12px;color:var(--g2)}
+.pills{display:flex;gap:7px;flex-wrap:wrap}
+.pill{background:var(--wh);border:1.5px solid var(--g2);color:var(--g6);padding:7px 15px;border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.pill:hover{border-color:var(--or);color:var(--or)}
+.pill.on{background:var(--or);color:#fff;border-color:var(--or);font-weight:700}
+.field{width:100%;border:1.5px solid var(--g2);border-radius:10px;padding:13px 16px;font-size:15px;color:var(--bk);background:var(--wh);outline:none;transition:border-color .15s,box-shadow .15s}
+.field:focus{border-color:var(--or);box-shadow:0 0 0 3px rgba(255,107,43,.1)}
+textarea.field{min-height:170px;resize:vertical;line-height:1.65}
+
+/* ALERTS */
+.alert{border-radius:10px;padding:11px 15px;font-size:13px}
+.alert-am{background:var(--amp);border:1.5px solid #FDE68A;color:#92400E}
+.alert-rd{background:var(--rdp);border:1.5px solid #FECACA;color:var(--rd)}
+
+/* BUTTONS */
+.btnp{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--or);color:#fff;border:none;padding:14px 28px;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;width:100%}
+.btnp:hover:not(:disabled){background:var(--orh);transform:translateY(-1px);box-shadow:0 6px 24px rgba(255,107,43,.28)}
+.btnp:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
+.btng{display:inline-flex;align-items:center;gap:6px;background:transparent;color:var(--g6);border:1.5px solid var(--g2);padding:10px 20px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s}
+.btng:hover{border-color:var(--or);color:var(--or)}
+.btnsm{background:var(--g1);border:none;color:var(--g6);padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.btnsm:hover{background:var(--or);color:#fff}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.52);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}
+.modal{background:var(--wh);border-radius:18px;padding:40px 36px;max-width:420px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,.18);animation:fadeUp .4s ease both}
+.mico{width:46px;height:46px;background:var(--orp);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:18px}
+.modal h2{font-size:25px;letter-spacing:-.02em;margin-bottom:10px}
+.modal p{font-size:14px;color:var(--g4);line-height:1.65;margin-bottom:22px}
+.mnote{font-size:11px;color:var(--g2);text-align:center;margin-top:11px}
+
+/* RESULTS */
+.rdiv{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.rdiv hr{flex:1;border:none;border-top:1px solid var(--g2)}
+.rdiv span{font-size:11px;font-weight:700;color:var(--g4);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.card{background:var(--wh);border:1.5px solid var(--g2);border-radius:14px;padding:26px;margin-bottom:13px}
+.sinner{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+.rwrap{position:relative;width:120px;height:120px;flex-shrink:0}
+.rwrap svg{position:absolute;top:0;left:0}
+.rinner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.rnum{font-size:27px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.rden{font-size:11px;color:var(--g4)}
+.smeta{flex:1;min-width:200px}
+.sbadge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:13px}
+.mrow{margin-bottom:11px}
+.mlbl{font-size:11px;color:var(--g2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;font-weight:700}
+.mval{font-size:14px;line-height:1.5}
+.bgroup{margin-bottom:13px}
+.brow{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.blbl{font-size:13px;color:var(--g6)}
+.bval{font-size:13px;font-weight:700}
+.btrack{background:#F0F0F0;border-radius:999px;height:7px;overflow:hidden}
+.bfill{height:100%;border-radius:999px;transition:width 1.2s cubic-bezier(.16,1,.3,1)}
+.fcard{background:var(--orp);border:1.5px solid var(--orb);border-radius:14px;padding:24px;margin-bottom:13px}
+.fcard .lbl{color:var(--or);margin-bottom:9px}
+.fcard p{font-size:15px;color:var(--g8);line-height:1.75}
+.rhdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.rtag{font-size:13px;color:var(--or);font-weight:600}
+.rbody{background:var(--g1);border-radius:10px;padding:18px;white-space:pre-wrap;font-size:15px;line-height:1.75;color:var(--bk)}
+.tcard{border:2px solid var(--or);border-radius:14px;padding:26px;margin-bottom:13px}
+.thdr{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px}
+.temoji{font-size:28px;flex-shrink:0}
+.tpill{font-size:11px;font-weight:700;color:var(--or);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+.tname{font-size:19px;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+.tdesc{font-size:14px;color:var(--g4);line-height:1.5}
+.trul{height:1px;background:var(--g2);margin:16px 0}
+.ttxt{font-size:14px;color:var(--g6);line-height:1.7;margin-bottom:20px}
+.tcta{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.tfine{font-size:12px;color:var(--g2)}
+.gagain{text-align:center;margin-top:28px}
+.gagain a{color:var(--or);font-weight:700}
+footer{border-top:1px solid var(--g2);padding:20px 24px;text-align:center;font-size:13px;color:var(--g2)}
+footer a{color:var(--or);font-weight:700}
+
+/* ADMIN */
+.abg{min-height:100vh;background:var(--g1)}
+.anav{background:var(--wh);border-bottom:1px solid var(--g2);padding:14px 26px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.abtns{display:flex;gap:8px}
+.ainner{padding:26px;max-width:1060px;margin:0 auto}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:13px;margin-bottom:22px}
+.scard{background:var(--wh);border:1.5px solid var(--g2);border-radius:14px;padding:20px;text-align:center}
+.snum{font-size:36px;font-weight:800;color:var(--or);letter-spacing:-.03em}
+.slbl{font-size:12px;color:var(--g4);margin-top:3px}
+.tblcard{background:var(--wh);border:1.5px solid var(--g2);border-radius:14px;overflow:hidden}
+.tblhd{padding:15px 18px;border-bottom:1px solid var(--g2);display:flex;justify-content:space-between;align-items:center}
+table{width:100%;border-collapse:collapse}
+th{background:var(--g1);padding:9px 13px;text-align:left;font-size:11px;font-weight:700;color:var(--g4);text-transform:uppercase;letter-spacing:.06em}
+td{padding:11px 13px;border-bottom:1px solid var(--g2);font-size:13px;color:var(--g6);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+.tag{background:var(--orp);color:var(--or);padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700}
+.lbg{min-height:100vh;background:var(--g1);display:flex;align-items:center;justify-content:center;padding:20px}
+.lbox{background:var(--wh);border-radius:16px;padding:38px 34px;max-width:370px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.08)}
+
+@media(max-width:480px){.modal{padding:28px 20px}.sinner{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<!-- EMAIL GATE -->
+<div id="gate" class="overlay hidden">
+  <div class="modal">
+    <div class="mico">✦</div>
+    <h2 class="serif">Your results are ready</h2>
+    <p>Enter your email to unlock your full score, AI rewrite, and matched template from TemplateBase.</p>
+    <input class="field" type="email" id="eInput" placeholder="you@email.com" style="margin-bottom:10px"/>
+    <p id="eErr" class="hidden" style="color:var(--rd);font-size:13px;margin-bottom:10px"></p>
+    <button class="btnp" id="eBtn" onclick="submitEmail()">See My Results →</button>
+    <p class="mnote">No spam. Unsubscribe anytime.</p>
+  </div>
+</div>
+
+<!-- GRADER -->
+<div id="graderPage">
+  <nav>
+    <div class="nlogo">
+      <div class="nico">✦</div>
+      <span style="font-weight:800;font-size:15px;letter-spacing:-.02em">TemplateBase</span>
+      <span style="color:var(--g2);margin:0 4px">/</span>
+      <span style="font-size:13px;color:var(--g4)">Post Grader</span>
+    </div>
+    <a href="https://templatebase.site" target="_blank" class="ncta">Get 600 Templates →</a>
+  </nav>
+
+  <div class="wrap">
+    <div class="hero">
+      <div class="hbadge">Free · Powered by Claude AI</div>
+      <h1 class="serif">Is your post strong<br/>enough to <em>actually perform?</em></h1>
+      <p>Paste any post. Get scored across 5 dimensions. See exactly which template structure fixes your weakest point.</p>
+      <div class="hchecks">
+        <div class="hcheck"><b>✓</b> <span id="leftTxt">3</span> free grades left today</div>
+        <div class="hcheck"><b>✓</b> Results in ~5 seconds</div>
+        <div class="hcheck"><b>✓</b> Matched template included</div>
+      </div>
+    </div>
+
+    <div class="fgroup">
+      <div>
+        <span class="lbl">Platform</span>
+        <div class="pills">
+          <button class="pill on" onclick="setPl(this,'X / Twitter')">X / Twitter</button>
+          <button class="pill" onclick="setPl(this,'Threads')">Threads</button>
+          <button class="pill" onclick="setPl(this,'LinkedIn')">LinkedIn</button>
+          <button class="pill" onclick="setPl(this,'Substack')">Substack</button>
+          <button class="pill" onclick="setPl(this,'Instagram')">Instagram</button>
+        </div>
+      </div>
+      <div>
+        <span class="lbl">Your Niche</span>
+        <input class="field" type="text" id="niche" placeholder="e.g. SaaS founder, personal finance, fitness coach…"/>
+      </div>
+      <div>
+        <div class="lrow">
+          <span class="lbl">Your Post</span>
+          <span class="ccount" id="cc">0 chars</span>
+        </div>
+        <textarea class="field" id="post" placeholder="Paste your post here exactly as you'd publish it…" oninput="document.getElementById('cc').textContent=this.value.length+' chars'"></textarea>
+      </div>
+      <div id="aAmber" class="alert alert-am hidden">⚠️ <strong>1 grade left today.</strong> Resets at midnight.</div>
+      <div id="aErr"   class="alert alert-rd hidden"></div>
+      <button class="btnp" id="gradeBtn" onclick="grade()">Grade My Post →</button>
+      <div id="noLeft" class="hidden" style="text-align:center;padding-top:6px">
+        <p style="font-size:13px;color:var(--g4);margin-bottom:12px">Want unlimited grades + 600 AI-fill templates?</p>
+        <a href="https://templatebase.site/#pricing" target="_blank"><button class="btnp" style="width:auto">Get All Access — $99 once →</button></a>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="results" class="hidden" style="margin-top:56px">
+      <div class="rdiv"><hr/><span>Your Results</span><hr/></div>
+
+      <div class="card">
+        <div class="sinner">
+          <div class="rwrap">
+            <svg width="120" height="120"><circle cx="60" cy="60" r="48" fill="none" stroke="#F0F0F0" stroke-width="9"/></svg>
+            <svg width="120" height="120" style="transform:rotate(-90deg)">
+              <circle id="arc" cx="60" cy="60" r="48" fill="none" stroke-width="9" stroke-linecap="round" stroke-dasharray="0 301.6" style="transition:stroke-dasharray 1.2s cubic-bezier(.16,1,.3,1)"/>
+            </svg>
+            <div class="rinner">
+              <span id="rnum" class="rnum">—</span>
+              <span class="rden">/100</span>
+            </div>
+          </div>
+          <div class="smeta">
+            <span id="sbadge" class="sbadge"></span>
+            <div class="mrow"><div class="mlbl">Top Strength</div><div id="mstr" class="mval" style="color:var(--gn)"></div></div>
+            <div class="mrow"><div class="mlbl">Biggest Problem</div><div id="mweak" class="mval" style="color:var(--rd)"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="lbl">Score Breakdown</span>
+        <div id="bars"></div>
+      </div>
+
+      <div class="fcard">
+        <span class="lbl">⚡ How To Fix It</span>
+        <p id="fixit"></p>
+      </div>
+
+      <div class="card">
+        <div class="rhdr">
+          <div><span class="lbl" style="margin-bottom:3px">✦ AI Rewrite</span><div id="rtag" class="rtag"></div></div>
+          <button class="btnsm" id="cpBtn" onclick="copyRw()">Copy post</button>
+        </div>
+        <div id="rbody" class="rbody"></div>
+      </div>
+
+      <div class="tcard">
+        <div class="thdr">
+          <div id="temoji" class="temoji"></div>
+          <div>
+            <div class="tpill">Matched Template · TemplateBase</div>
+            <div id="tname" class="tname"></div>
+            <div id="tdesc" class="tdesc"></div>
+          </div>
+        </div>
+        <div class="trul"></div>
+        <p class="ttxt">TemplateBase has <strong>600 templates</strong> like this — for X, Threads, LinkedIn, Substack and Instagram. Fill any with AI in your exact voice.</p>
+        <div class="tcta">
+          <a href="https://templatebase.site/#pricing" target="_blank"><button class="btnp" style="width:auto;padding:13px 26px">Unlock 600 Templates →</button></a>
+          <span class="tfine">5 free · no card · cancel anytime</span>
+        </div>
+      </div>
+
+      <div id="again" class="gagain"></div>
+    </div>
+  </div>
+
+  <footer>A free tool by <a href="https://templatebase.site">TemplateBase</a> · 600+ social media templates · Fill with AI</footer>
+</div>
+
+<!-- ADMIN -->
+<div id="adminPage" class="hidden">
+  <div id="aLogin" class="lbg">
+    <div class="lbox">
+      <div style="font-size:13px;font-weight:800;color:var(--or);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">TemplateBase</div>
+      <h2 style="font-size:21px;font-weight:800;letter-spacing:-.02em;margin-bottom:22px">Admin Panel</h2>
+      <input class="field" type="password" id="pwIn" placeholder="Password" style="margin-bottom:10px" onkeydown="if(event.key==='Enter')doLogin()"/>
+      <p id="pwErr" class="hidden" style="color:var(--rd);font-size:13px;margin-bottom:10px"></p>
+      <button class="btnp" onclick="doLogin()">Sign In</button>
+    </div>
+  </div>
+  <div id="aDash" class="abg hidden">
+    <div class="anav">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="nico">✦</div>
+        <span style="font-weight:800;font-size:14px">TemplateBase</span>
+        <span style="color:var(--g2);margin:0 5px">/</span>
+        <span style="font-size:13px;font-weight:600;color:var(--g6)">Lead Dashboard</span>
+      </div>
+      <div class="abtns">
+        <button class="btnsm" id="cpAll" onclick="copyEmails()">Copy All Emails</button>
+        <button class="btnsm" onclick="doCSV()" style="background:var(--or);color:#fff">Export CSV</button>
+      </div>
+    </div>
+    <div class="ainner">
+      <div class="sgrid">
+        <div class="scard"><div id="st" class="snum">0</div><div class="slbl">Total Leads</div></div>
+        <div class="scard"><div id="sw" class="snum">0</div><div class="slbl">This Week</div></div>
+        <div class="scard"><div id="sd" class="snum">0</div><div class="slbl">Today</div></div>
+      </div>
+      <div class="tblcard">
+        <div class="tblhd"><strong>All Leads</strong><span id="lcount">0 total</span></div>
+        <div id="tblWrap"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────
+const ADMIN_PW   = "templatebase2024"; // change this!
+const MAX_GRADES = 3;
+const LS         = "tbg4";
+const TMPLS = {
+  hook_weak:       {label:"Authority Builder", icon:"🎯", desc:"Opens with a bold credibility hook that stops the scroll instantly."},
+  no_story:        {label:"Storytelling",       icon:"📖", desc:"A before/after arc that makes your transformation land emotionally."},
+  no_perspective:  {label:"Perspective Shift",  icon:"🔄", desc:"Challenges a widely-held belief with a sharp contrarian take."},
+  not_educational: {label:"Educational",        icon:"💡", desc:"Teaches something specific and actionable in a skimmable format."},
+  low_engagement:  {label:"Engagement",         icon:"💬", desc:"Invites direct audience participation with a clear open prompt."},
+  not_relatable:   {label:"Relatability",       icon:"🤝", desc:"Makes the reader feel deeply seen through a shared experience."},
+};
+
+// ── STATE ───────────────────────────────────────────
+let platform = "X / Twitter";
+let pending  = null;
+let rw       = "";
+let allLeads = [];
+
+// ── HELPERS ─────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const show = id => $(id).classList.remove("hidden");
+const hide = id => $(id).classList.add("hidden");
+const esc  = s  => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+function lsGet(){ try{return JSON.parse(localStorage.getItem(LS)||"{}")}catch{return{}} }
+function lsSet(d){ try{localStorage.setItem(LS,JSON.stringify(d))}catch{} }
+function dayKey(){ return new Date().toISOString().slice(0,10) }
+function left(){ const s=lsGet(); return Math.max(0,MAX_GRADES-(s.grades?.[dayKey()]||0)) }
+function useGrade(){ const s=lsGet(),t=dayKey(); s.grades=s.grades||{}; s.grades[t]=(s.grades[t]||0)+1; lsSet(s) }
+function getEmail(){ return lsGet().email||"" }
+function saveEmail(e){ const s=lsGet(); s.email=e; lsSet(s) }
+function sc(s){ return s>=80?"var(--gn)":s>=60?"var(--am)":s>=40?"var(--or)":"var(--rd)" }
+function sl(s){
+  if(s>=80) return ["Strong","var(--gnp)","var(--gn)"];
+  if(s>=60) return ["Good","var(--amp)","var(--am)"];
+  if(s>=40) return ["Needs Work","var(--orp)","var(--or)"];
+  return ["Weak","var(--rdp)","var(--rd)"];
+}
+
+// ── LEAD STORAGE ────────────────────────────────────
+async function storeLead(email, plat, niche, post){
+  try{
+    let leads=[];
+    try{ const r=await window.storage.get("tb_leads"); if(r) leads=JSON.parse(r.value) }catch{}
+    if(!leads.find(l=>l.email===email)){
+      leads.unshift({id:Date.now(),email,platform:plat,niche,preview:post.slice(0,180),
+        date:new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"}),ts:Date.now()});
+      await window.storage.set("tb_leads",JSON.stringify(leads));
+    }
+  }catch(e){ console.warn("storage:",e) }
+}
+async function getLeads(){
+  try{ const r=await window.storage.get("tb_leads"); return r?JSON.parse(r.value):[] }catch{ return[] }
+}
+
+// ── UI ───────────────────────────────────────────────
+function refreshUI(){
+  const n=left();
+  $("leftTxt").textContent=n;
+  const btn=$("gradeBtn");
+  if(n<=0){ btn.disabled=true; btn.textContent="No grades left today"; show("noLeft") }
+  else{ btn.disabled=false; if(n===1) show("aAmber"); else hide("aAmber") }
+}
+function setPl(btn,name){
+  platform=name;
+  document.querySelectorAll(".pill").forEach(p=>p.classList.remove("on"));
+  btn.classList.add("on");
+}
+function showErr(msg){ $("aErr").textContent=msg; show("aErr") }
+
+// ── GRADE ────────────────────────────────────────────
+async function grade(){
+  const post=$("post").value.trim();
+  const niche=$("niche").value.trim();
+  hide("aErr");
+  if(!post){ showErr("Please paste your post first."); return }
+  if(!niche){ showErr("Please enter your niche."); return }
+  if(left()<=0){ showErr("You've used all 3 free grades today. Come back tomorrow."); return }
+
+  const btn=$("gradeBtn");
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span> Grading with AI…';
+  hide("results");
+
+  try{
+    const res = await fetch("/.netlify/functions/grade",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({post,platform,niche})
+    });
+
+    const txt = await res.text();
+    let data;
+    try{ data=JSON.parse(txt) }
+    catch(e){ throw new Error("Function not reachable. Check Netlify → Functions tab is showing 'grade'. Raw: "+txt.slice(0,80)) }
+    if(!res.ok) throw new Error(data.error||"Error "+res.status);
+
+    useGrade(); refreshUI(); pending=data;
+    if(getEmail()){ renderResults(data) }
+    else{ show("gate"); setTimeout(()=>$("eInput").focus(),80) }
+
+  }catch(e){
+    showErr(e.message);
+    btn.disabled=false;
+    btn.textContent="Grade My Post →";
+  }
+}
+
+// ── EMAIL GATE ───────────────────────────────────────
+async function submitEmail(){
+  const email=$("eInput").value.trim().toLowerCase();
+  hide("eErr");
+  if(!email||!email.includes("@")||!email.includes(".")){
+    $("eErr").textContent="Enter a valid email address."; show("eErr"); return
+  }
+  const btn=$("eBtn");
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Unlocking…';
+  saveEmail(email);
+  await storeLead(email,platform,$("niche").value.trim(),$("post").value.trim());
+  hide("gate"); renderResults(pending);
+  btn.disabled=false; btn.textContent="See My Results →";
+}
+$("eInput").addEventListener("keydown",e=>{ if(e.key==="Enter") submitEmail() });
+
+// ── RENDER ───────────────────────────────────────────
+function renderResults(r){
+  const circ=2*Math.PI*48;
+  const col=sc(r.overall_score);
+  const [lbl,bg,txt]=sl(r.overall_score);
+  const arc=$("arc"); arc.style.stroke=col;
+  arc.setAttribute("stroke-dasharray",`${(r.overall_score/100)*circ} ${circ}`);
+  $("rnum").textContent=r.overall_score; $("rnum").style.color=col;
+  const b=$("sbadge"); b.textContent=lbl; b.style.background=bg; b.style.color=txt;
+  $("mstr").textContent="✓ "+r.top_strength;
+  $("mweak").textContent="✕ "+r.top_weakness;
+
+  const barDefs=[
+    ["🎣","Hook Strength",r.scores.hook_strength],
+    ["🎯","Specificity",r.scores.specificity],
+    ["📐","Format Fit",r.scores.format_fit],
+    ["💡","Emotional Pull",r.scores.emotional_pull],
+    ["👉","CTA Clarity",r.scores.cta_clarity]
+  ];
+  $("bars").innerHTML=barDefs.map(([ic,lb,s])=>`
+    <div class="bgroup">
+      <div class="brow"><span class="blbl">${ic} ${lb}</span><span class="bval" style="color:${sc(s)}">${s}/100</span></div>
+      <div class="btrack"><div class="bfill" style="width:0%;background:${sc(s)}" data-w="${s}"></div></div>
+    </div>`).join("");
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    document.querySelectorAll(".bfill[data-w]").forEach(b=>b.style.width=b.dataset.w+"%");
+  }));
+
+  $("fixit").textContent=r.fix_it;
+  const t=TMPLS[r.template_match]||TMPLS.hook_weak;
+  rw=r.rewrite;
+  $("rtag").textContent="Using "+t.label+" structure";
+  $("rbody").textContent=r.rewrite;
+  $("temoji").textContent=t.icon;
+  $("tname").textContent=t.label;
+  $("tdesc").textContent=t.desc;
+
+  const n=left();
+  $("again").innerHTML=n>0
+    ?`<button class="btng" onclick="reset()">Grade another post (${n} left today)</button>`
+    :`<p style="font-size:13px;color:var(--g4)">Daily limit reached. <a href="https://templatebase.site/#pricing" target="_blank">Get All Access</a> for unlimited grades.</p>`;
+
+  show("results"); $("results").classList.add("fade-up");
+  setTimeout(()=>$("results").scrollIntoView({behavior:"smooth",block:"start"}),100);
+}
+
+function copyRw(){
+  navigator.clipboard.writeText(rw).catch(()=>{
+    const t=document.createElement("textarea"); t.value=rw;
+    document.body.appendChild(t); t.select(); document.execCommand("copy"); document.body.removeChild(t);
+  });
+  const b=$("cpBtn"); b.textContent="✓ Copied!"; setTimeout(()=>b.textContent="Copy post",1500);
+}
+
+function reset(){
+  hide("results"); hide("aErr"); hide("aAmber");
+  $("post").value=""; $("niche").value=""; $("cc").textContent="0 chars";
+  pending=null; rw=""; window.scrollTo({top:0,behavior:"smooth"});
+}
+
+// ── ADMIN ────────────────────────────────────────────
+function doLogin(){
+  if($("pwIn").value!==ADMIN_PW){ $("pwErr").textContent="Incorrect password."; show("pwErr"); return }
+  hide("pwErr"); hide("aLogin"); show("aDash"); loadLeads();
+}
+$("pwIn").addEventListener("keydown",e=>{ if(e.key==="Enter") doLogin() });
+
+async function loadLeads(){
+  allLeads=await getLeads();
+  const now=Date.now();
+  $("st").textContent=allLeads.length;
+  $("sw").textContent=allLeads.filter(l=>now-l.ts<7*86400000).length;
+  $("sd").textContent=allLeads.filter(l=>new Date(l.ts).toDateString()===new Date().toDateString()).length;
+  $("lcount").textContent=allLeads.length+" total";
+  if(!allLeads.length){
+    $("tblWrap").innerHTML=`<div style="padding:44px;text-align:center"><p style="color:var(--g4);font-size:15px;margin-bottom:6px">No leads yet.</p><p style="color:var(--g2);font-size:13px">Share the grader to start collecting.</p></div>`;
+    return;
+  }
+  $("tblWrap").innerHTML=`<div style="overflow-x:auto"><table>
+    <thead><tr><th>Email</th><th>Platform</th><th>Niche</th><th>Post Preview</th><th>Date</th></tr></thead>
+    <tbody>${allLeads.map(l=>`<tr>
+      <td style="font-weight:700;color:var(--bk);white-space:nowrap">${esc(l.email)}</td>
+      <td><span class="tag">${esc(l.platform)}</span></td>
+      <td>${esc(l.niche||"")}</td>
+      <td style="max-width:230px;color:var(--g4)">${esc((l.preview||"").slice(0,110))}…</td>
+      <td style="white-space:nowrap;color:var(--g4)">${esc(l.date||"")}</td>
+    </tr>`).join("")}</tbody>
+  </table></div>`;
+}
+
+function copyEmails(){
+  navigator.clipboard.writeText(allLeads.map(l=>l.email).join("\n")).then(()=>{
+    const b=$("cpAll"); b.textContent="✓ Copied!"; setTimeout(()=>b.textContent="Copy All Emails",1600);
+  });
+}
+function doCSV(){
+  const rows=[["Email","Platform","Niche","Post Preview","Date"],
+    ...allLeads.map(l=>[l.email,l.platform,l.niche||"",(l.preview||"").replace(/"/g,"'"),l.date||""])];
+  const csv=rows.map(r=>r.map(c=>`"${c}"`).join(",")).join("\n");
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+  a.download="templatebase-leads.csv"; a.click();
+}
+
+// ── ROUTER ───────────────────────────────────────────
+function route(){
+  const admin=window.location.pathname.includes("/admin")||window.location.search.includes("admin");
+  if(admin){ hide("graderPage"); show("adminPage") }
+  else{ show("graderPage"); hide("adminPage") }
+}
+route(); refreshUI();
+</script>
+</body>
+</html>
